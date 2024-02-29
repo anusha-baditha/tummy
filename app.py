@@ -2,17 +2,11 @@ from flask import Flask,render_template,redirect,url_for,request,flash,session
 from flask_session import Session
 app=Flask(__name__)  #it shows the current module path
 import mysql.connector
-<<<<<<< HEAD
 import os
 mydb=mysql.connector.connect(host='localhost',user='root',password='anusha@1999',db='task1')
 app.secret_key='guruji'
 app.config['SESSION_TYPE']='filesystem'
 Session(app)
-=======
-mydb=mysql.connector.connect(host='localhost',user='root',password='anusha@1999',db='task1')
-app.secret_key='guruji'
-app.config['SESSION_TYPE']='filesystem'
->>>>>>> origin/main
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -25,7 +19,6 @@ def register():
         password=request.form['password']
         cpassword=request.form['cpassword']
         phone=request.form['phone']
-<<<<<<< HEAD
         img=request.files['image']
         print(img)
         filename=img.filename
@@ -34,8 +27,6 @@ def register():
         static_path=os.path.join(path,'static')
         img.save(os.path.join(static_path,filename))
 
-=======
->>>>>>> origin/main
         try:
             cursor=mydb.cursor(buffered=True)
             cursor.execute('select count(*) from register where first_name=%s',[fname])
@@ -48,11 +39,7 @@ def register():
             return redirect(url_for('home'))
         else:
             cursor=mydb.cursor(buffered=True)
-<<<<<<< HEAD
             cursor.execute('insert into register(first_name,last_name,phone,email,password,img) values(%s,%s,%s,%s,%s,%s)',[fname,lname,phone,email,password,filename])
-=======
-            cursor.execute('insert into register(first_name,last_name,phone,email,password) values(%s,%s,%s,%s,%s)',[fname,lname,phone,email,password])
->>>>>>> origin/main
             mydb.commit()
             cursor.close()
             flash('Your Details has registered successfully')
@@ -91,7 +78,6 @@ def about():
     return render_template('about.html')
 @app.route('/gurus')
 def gurus():
-<<<<<<< HEAD
     cursor=mydb.cursor(buffered=True)
     cursor.execute('select * from register')
     users=cursor.fetchall()
@@ -102,12 +88,6 @@ def guru(user):
     cursor.execute('select first_name,last_name,phone,img,description from register where email=%s',[user])
     data=cursor.fetchone()
     return render_template('guru.html',data=data)
-=======
-    return render_template('gurus.html')
-@app.route('/guru')
-def guru():
-    return render_template('guru.html')
->>>>>>> origin/main
 @app.route('/contactus',methods=['GET','POST'])
 def contactus():
     if request.method=='POST':
@@ -123,68 +103,36 @@ def contactus():
 @app.route('/profile',methods=['GET','POST'])
 def profile():
     cursor=mydb.cursor(buffered=True)
-<<<<<<< HEAD
     cursor.execute('select first_name,last_name,phone,img,description from register where email=%s',[session.get('user')])
-=======
-    cursor.execute('select first_name,last_name,phone from register where email=%s',[session.get('user')])
->>>>>>> origin/main
     count=cursor.fetchone()
     if request.method=='POST':
         fname=request.form['fname']
         lname=request.form['lname']
         phone=request.form['phone']
-<<<<<<< HEAD
         des=request.form['editordata']
         print(fname,lname,phone)
         cursor=mydb.cursor(buffered=True)
         cursor.execute('update register set first_name=%s,last_name=%s,phone=%s,description=%s where email=%s',[fname,lname,phone,des,session.get('user')])
-=======
-        print(fname,lname,phone)
-        cursor=mydb.cursor(buffered=True)
-        cursor.execute('update register set first_name=%s,last_name=%s,phone=%s where email=%s',[fname,lname,phone,session.get('user')])
->>>>>>> origin/main
         mydb.commit()
         cursor.close()
         return redirect(url_for('profile'))
     return render_template('profile.html',count=count)
 @app.route('/admin')
 def admin():
-<<<<<<< HEAD
     cursor=mydb.cursor(buffered=True)
     cursor.execute('select * from register')
     users=cursor.fetchall()
-    return render_template('admindashboard.html',users=users)  
+    return render_template('admindashboard.html',users=users)
 @app.route('/upadte/<name>',methods=['GET','POST'])
 def update(name):
     cursor=mydb.cursor(buffered=True)
     cursor.execute('select first_name,last_name,phone,img,description from register where first_name=%s',[name])
     count=cursor.fetchone()
     print(count)
-=======
-    return render_template('admindashboard.html')
-@app.route('/viewusers')
-def viewusers():
-    cursor=mydb.cursor(buffered=True)
-    cursor.execute('select * from register')
-    users=cursor.fetchall()
-    return render_template('admin dashboard.html',users=users)  
-@app.route('/enquries')
-def enqueries():
-    cursor=mydb.cursor(buffered=True)
-    cursor.execute('select * from contact')
-    count=cursor.fetchall()
-    return render_template('queries.html',count=count)
-@app.route('/upadte/<name>',methods=['GET','POST'])
-def update(name):
-    cursor=mydb.cursor(buffered=True)
-    cursor.execute('select first_name,last_name,phone from register where first_name=%s',[name])
-    data=cursor.fetchone()
->>>>>>> origin/main
     if request.method=='POST':
         fname=request.form['fname']
         lname=request.form['lname']
         phone=request.form['phone']
-<<<<<<< HEAD
         des=request.form['editordata']
         print(fname,lname,phone)
         cursor=mydb.cursor(buffered=True)
@@ -193,22 +141,12 @@ def update(name):
         cursor.close()
         return redirect(url_for('profile'))
     return render_template('profile.html',count=count)
-=======
-        print(fname,lname,phone)
-        cursor=mydb.cursor(buffered=True)
-        cursor.execute('update register set first_name=%s,last_name=%s,phone=%s where first_name=%s',[fname,lname,phone,name])
-        mydb.commit()
-        cursor.close()
-        return redirect(url_for('viewusers'))
-    return render_template('update.html',data=data)
->>>>>>> origin/main
 @app.route('/delete/<name>')
 def delete(name):
     cursor=mydb.cursor(buffered=True)
     cursor.execute('delete from register where first_name=%s',[name])
     mydb.commit()
     cursor.close()
-<<<<<<< HEAD
     return redirect(url_for('admin'))
 @app.route('/adminregister',methods=['Get','POST'])
 def adminregister():
@@ -244,7 +182,4 @@ def adminregister():
             flash('Your Details has registered successfully')
             return redirect(url_for('admin'))
     return redirect(url_for('admin'))
-=======
-    return redirect(url_for('viewusers'))
->>>>>>> origin/main
 app.run(debug=True)
